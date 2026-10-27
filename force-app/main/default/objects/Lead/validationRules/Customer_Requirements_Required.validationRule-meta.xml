@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Customer_Requirements_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISPICKVAL(Status, &quot;New&quot;)),
+    NOT(ISPICKVAL(Status, &quot;Closed Lost&quot;)),
+    ISBLANK(Customer_Requirement__c)
+)</errorConditionFormula>
+    <errorDisplayField>Customer_Requirement__c</errorDisplayField>
+    <errorMessage>Please enter Customer Requirements before moving the Lead to this stage.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lead_Status__c</fullName>
+    <label>Lead Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Hot Lead</fullName>
+                <default>false</default>
+                <label>Hot Lead</label>
+            </value>
+            <value>
+                <fullName>Warm Lea</fullName>
+                <default>false</default>
+                <label>Warm Lea</label>
+            </value>
+            <value>
+                <fullName>Cold Lead</fullName>
+                <default>false</default>
+                <label>Cold Lead</label>
+            </value>
+            <value>
+                <fullName>Site Visit Planned</fullName>
+                <default>false</default>
+                <label>Site Visit Planned</label>
+            </value>
+            <value>
+                <fullName>Site Visit Done</fullName>
+                <default>false</default>
+                <label>Site Visit Done</label>
+            </value>
+            <value>
+                <fullName>Virtual Connect Planned</fullName>
+                <default>false</default>
+                <label>Virtual Connect Planned</label>
+            </value>
+            <value>
+                <fullName>Virtual Connect Done</fullName>
+                <default>false</default>
+                <label>Virtual Connect Done</label>
+            </value>
+            <value>
+                <fullName>Follow-up</fullName>
+                <default>false</default>
+                <label>Follow-up</label>
+            </value>
+            <value>
+                <fullName>Cross Sale</fullName>
+                <default>false</default>
+                <label>Cross Sale</label>
+            </value>
+            <value>
+                <fullName>Financial proposals &amp; discount approvals</fullName>
+                <default>false</default>
+                <label>Financial proposals &amp; discount approvals</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

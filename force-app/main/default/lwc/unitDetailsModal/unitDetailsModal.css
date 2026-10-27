@@ -1,0 +1,699 @@
+/* =========================================================
+   MODAL BACKDROP
+   ========================================================= */
+/* =========================================================
+   CONTACT DETAILS
+   ========================================================= */
+
+.contact-section {
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #e5e5e5;
+}
+
+
+.contact-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+.contact-field {
+    min-width: 0;
+
+    padding: 10px 12px;
+
+    background: #fafafa;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 8px;
+}
+
+
+/*
+ * Remove some unnecessary spacing created by
+ * lightning-input-field inside the card.
+ */
+
+.contact-field lightning-input-field {
+    --slds-c-form-element-spacing-block-start: 0;
+    --slds-c-form-element-spacing-block-end: 0;
+}
+
+
+/* Book button */
+
+.booking-action {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 14px;
+}
+
+.unit-modal {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 99999;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MODAL CONTAINER
+   ========================================================= */
+
+.unit-modal-container {
+    position: relative;
+
+    width: 90%;
+    max-width: 1050px;
+
+    min-width: 700px;
+
+    max-height: calc(100vh - 40px);
+
+    display: flex;
+
+    flex-direction: column;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.30);
+
+    z-index: 100000;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.unit-modal-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 14px 22px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    flex-shrink: 0;
+}
+
+
+/* Header left */
+
+.unit-header-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+
+/* Header icon */
+
+.unit-header-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background: #eef7f5;
+}
+
+
+/* Header title */
+
+.unit-header-title {
+    margin: 0;
+
+    font-size: 20px;
+
+    line-height: 24px;
+
+    font-weight: 600;
+
+    color: #181818;
+}
+
+
+/* Header subtitle */
+
+.unit-header-code {
+    margin-top: 3px;
+
+    font-size: 13px;
+
+    line-height: 18px;
+
+    color: #706e6b;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.unit-close-button {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+.unit-close-button:hover {
+    background: #f3f3f3;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.unit-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 1px;
+
+    background: #e5e5e5;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    flex-shrink: 0;
+}
+
+
+/* Summary item */
+
+.summary-item {
+    min-width: 0;
+
+    min-height: 68px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 10px 15px;
+
+    background: #fafafa;
+
+    box-sizing: border-box;
+}
+
+
+/* Summary label */
+
+.summary-label {
+    margin-bottom: 5px;
+
+    font-size: 10px;
+
+    line-height: 14px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.04em;
+
+    text-transform: uppercase;
+
+    color: #706e6b;
+}
+
+
+/* Summary value */
+
+.summary-value {
+    font-size: 14px;
+
+    line-height: 18px;
+
+    font-weight: 600;
+
+    color: #181818;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: fit-content;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    line-height: 16px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* Available */
+
+.status-available {
+    background: #e3fcef;
+
+    color: #146c43;
+}
+
+
+/* Reserved */
+
+.status-hold {
+    background: #fff4d6;
+
+    color: #8a5a00;
+}
+
+
+/* Booked */
+
+.status-booked {
+    background: #fde7e9;
+
+    color: #b42318;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.unit-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    padding: 10px 22px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.unit-modal-body {
+    padding: 16px 22px;
+
+    background: #ffffff;
+
+    overflow-y: auto;
+
+    /*
+     * Do NOT give this a fixed height.
+     */
+    flex: 0 1 auto;
+
+    min-height: 0;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.details-section {
+    margin: 0;
+}
+
+
+/* Section heading */
+
+.section-heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+
+    font-size: 15px;
+
+    line-height: 20px;
+
+    font-weight: 600;
+
+    color: #181818;
+}
+
+
+/* =========================================================
+   DETAILS GRID
+   ========================================================= */
+
+.details-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   DETAIL CARD
+   ========================================================= */
+
+.detail-card {
+    min-width: 0;
+
+    min-height: 58px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 9px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 8px;
+
+    box-sizing: border-box;
+}
+
+
+/* Detail label */
+
+.detail-label {
+    margin-bottom: 4px;
+
+    font-size: 11px;
+
+    line-height: 14px;
+
+    color: #706e6b;
+}
+
+
+/* Detail value */
+
+.detail-value {
+    font-size: 14px;
+
+    line-height: 18px;
+
+    font-weight: 600;
+
+    color: #181818;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   TOTAL AMOUNT
+   ========================================================= */
+
+.total-card {
+    background: #f0faf6;
+
+    border: 1px solid #0b6e4f;
+}
+
+
+.total-card .detail-label {
+    color: #0b6e4f;
+
+    font-weight: 500;
+}
+
+
+.total-value {
+    font-size: 17px;
+
+    line-height: 21px;
+
+    font-weight: 700;
+
+    color: #0b6e4f;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.unit-modal-footer {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    padding: 10px 22px;
+
+    background: #fafafa;
+
+    border-top: 1px solid #e5e5e5;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.unit-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.unit-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.unit-modal-body::-webkit-scrollbar-thumb {
+    background: #c8c8c8;
+
+    border-radius: 10px;
+}
+
+.unit-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #999999;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 1000px) {
+
+    .unit-modal {
+        padding: 16px;
+    }
+
+    .unit-modal-container {
+        width: 94%;
+
+        min-width: 0;
+    }
+     .contact-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .unit-summary {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .details-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 650px) {
+
+    .unit-modal {
+        padding: 10px;
+    }
+
+    .unit-modal-container {
+        width: 100%;
+
+        max-height: calc(100vh - 20px);
+
+        min-width: 0;
+
+        border-radius: 10px;
+    }
+
+    .unit-modal-header {
+        padding: 12px 16px;
+    }
+
+    .unit-header-title {
+        font-size: 18px;
+    }
+
+    .unit-header-code {
+        max-width: 230px;
+
+        font-size: 12px;
+    }
+.contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-action {
+        justify-content: stretch;
+    }
+
+    .booking-action lightning-button {
+        width: 100%;
+    }
+    .unit-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-item {
+        min-height: 60px;
+
+        padding: 9px 12px;
+    }
+
+    .unit-actions {
+        padding: 10px 16px;
+
+        flex-wrap: wrap;
+    }
+
+    .unit-modal-body {
+        padding: 14px 16px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .unit-modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
+}
+}

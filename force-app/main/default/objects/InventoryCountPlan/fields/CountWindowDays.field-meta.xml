@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CountWindowDays</fullName>
+    <inlineHelpText>The number of days between the planned start and end date of each assessment related to this plan. For example, if the count window days is 5, and the planned start date of an assessment in this plan is January 4, 2024 at 9:00 AM, then the planned end date of that assessment is January 9, 2024 at 9:00 AM. If you don&apos;t specify a value, then the count interval is considered as the count window.</inlineHelpText>
+    <trackHistory>false</trackHistory>
+</CustomField>

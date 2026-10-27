@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Restrict_Site_Visit_Time</fullName>
+    <active>true</active>
+    <description>Prevents users from selecting a Site Visit Time before 8:00 AM or after 10:00 PM. Only times between 8:00 AM and 10:00 PM, inclusive, are allowed.</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Site_Visit_Time__c)),
+    OR(
+        Site_Visit_Time__c &lt; TIMEVALUE(&quot;08:00:00.000&quot;),
+        Site_Visit_Time__c &gt; TIMEVALUE(&quot;22:00:00.000&quot;)
+    )
+)</errorConditionFormula>
+    <errorMessage>Site Visit Time must be between 8:00 AM and 10:00 PM.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Token Amount Details" icon-name="standard:payment_gateway">
+        <div class="upload-container">
+
+            <lightning-combobox
+                label="Token Amount Received As"
+                value={tokenAmountReceivedAs}
+                options={paymentMethodOptions}
+                placeholder="Select payment method"
+                onchange={handlePaymentMethodChange}
+                required
+                disabled={isSaving}>
+            </lightning-combobox>
+
+            <!-- Cash does not require proof -->
+            <template lwc:if={isCash}>
+                <div class="cash-notice">
+                    <lightning-icon
+                        icon-name="utility:check"
+                        size="small"
+                        alternative-text="Cash">
+                    </lightning-icon>
+                    <span>Cash selected. No proof document is required.</span>
+                </div>
+            </template>
+
+            <!-- Other payment methods require proof -->
+            <template lwc:if={requiresProof}>
+                <div class="upload-area">
+                    <lightning-icon
+                        icon-name="utility:upload"
+                        size="large"
+                        alternative-text="Upload">
+                    </lightning-icon>
+
+                    <p class="upload-title">Upload payment proof</p>
+                    <p class="upload-subtitle">
+                        PDF, DOC, DOCX, JPG or PNG · Maximum 2 MB per file
+                    </p>
+
+                    <lightning-input
+                        type="file"
+                        label="Choose proof files"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        multiple
+                        onchange={handleFileChange}
+                        disabled={isSaving}>
+                    </lightning-input>
+                </div>
+
+                <template lwc:if={hasFiles}>
+                    <div class="file-section">
+                        <h3>Selected files ({files.length})</h3>
+
+                        <template for:each={files} for:item="file">
+                            <div key={file.id} class="file-row">
+                                <div class="file-info">
+                                    <p class="file-name">{file.name}</p>
+                                    <p class="file-size">{file.sizeLabel}</p>
+                                </div>
+
+                                <lightning-button-icon
+                                    icon-name="utility:delete"
+                                    alternative-text="Remove file"
+                                    title="Remove file"
+                                    data-id={file.id}
+                                    onclick={handleRemove}
+                                    disabled={isSaving}>
+                                </lightning-button-icon>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </template>
+
+            <div class="action-footer">
+                <lightning-button
+                    label="Save"
+                    variant="brand"
+                    onclick={handleSave}
+                    disabled={isSaveDisabled}>
+                </lightning-button>
+            </div>
+
+            <template lwc:if={isSaving}>
+                <lightning-spinner
+                    alternative-text="Saving token payment"
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

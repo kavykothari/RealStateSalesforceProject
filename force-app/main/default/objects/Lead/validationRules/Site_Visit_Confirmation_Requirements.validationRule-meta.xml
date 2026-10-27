@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Site_Visit_Confirmation_Requirements</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(
+    AND(
+        ISPICKVAL(Site_Visit_Status__c, &quot;Confirmed&quot;),
+        OR(
+            ISBLANK(Confirmed_Site_Visit_Date__c),
+            ISBLANK(Site_Visit_Time__c)
+        )
+    ),
+    AND(
+        NOT(ISPICKVAL(Site_Visit_Status__c, &quot;Confirmed&quot;)),
+        OR(
+            NOT(ISBLANK(Confirmed_Site_Visit_Date__c)),
+            NOT(ISBLANK(Site_Visit_Time__c))
+        )
+    )
+)</errorConditionFormula>
+    <errorMessage>Site Visit Status, Confirmed Date, and Confirmed Time must be updated together.</errorMessage>
+</ValidationRule>

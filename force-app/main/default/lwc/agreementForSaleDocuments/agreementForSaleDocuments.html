@@ -1,0 +1,154 @@
+<template>
+    <lightning-card title="Agreement for Sale Documents"
+                    icon-name="standard:document">
+        <div class="document-container">
+
+            <!-- Agreement Draft -->
+            <section class="document-card">
+                <div class="document-header">
+                    <div class="document-icon draft-icon">
+                        <lightning-icon
+                            icon-name="doctype:pdf"
+                            size="medium">
+                        </lightning-icon>
+                    </div>
+
+                    <div class="document-info">
+                        <h3>Agreement for Sale – Draft</h3>
+                        <p>Upload the draft agreement for review.</p>
+                    </div>
+
+                    <template if:true={draftVerified}>
+                        <lightning-icon
+                            icon-name="utility:success"
+                            variant="success"
+                            size="small"
+                            alternative-text="Uploaded">
+                        </lightning-icon>
+                    </template>
+                </div>
+
+                <div class="status-row">
+                    <template if:true={draftVerified}>
+                        <span class="status-complete">
+                            <lightning-icon
+                                icon-name="utility:check"
+                                size="xx-small">
+                            </lightning-icon>
+                            Uploaded
+                        </span>
+                    </template>
+                    <template if:false={draftVerified}>
+                        <span class="status-pending">Not uploaded</span>
+                    </template>
+                </div>
+
+                <lightning-input
+                    type="file"
+                    label="Select draft document"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    data-doctype="DRAFT"
+                    onchange={handleFileChange}
+                    disabled={draftUploading}>
+                </lightning-input>
+
+                <template if:true={draftFileName}>
+                    <p class="file-name">
+                        Selected: {draftFileName}
+                    </p>
+                </template>
+
+                <div class="action-row">
+                    <lightning-button
+                        label={draftButtonLabel}
+                        variant="brand"
+                        icon-name="utility:upload"
+                        onclick={uploadDraft}
+                        disabled={draftUploadDisabled}>
+                    </lightning-button>
+                </div>
+
+                <template if:true={draftUploading}>
+                    <lightning-spinner
+                        alternative-text="Uploading draft"
+                        size="small">
+                    </lightning-spinner>
+                </template>
+            </section>
+
+            <!-- Agreement Executed Copy -->
+            <section class="document-card">
+                <div class="document-header">
+                    <div class="document-icon executed-icon">
+                        <lightning-icon
+                            icon-name="doctype:pdf"
+                            size="medium">
+                        </lightning-icon>
+                    </div>
+
+                    <div class="document-info">
+                        <h3>Agreement for Sale – Executed Copy</h3>
+                        <p>Upload the signed/executed agreement.</p>
+                    </div>
+
+                    <template if:true={executedVerified}>
+                        <lightning-icon
+                            icon-name="utility:success"
+                            variant="success"
+                            size="small"
+                            alternative-text="Uploaded">
+                        </lightning-icon>
+                    </template>
+                </div>
+
+                <div class="status-row">
+                    <template if:true={executedVerified}>
+                        <span class="status-complete">
+                            <lightning-icon
+                                icon-name="utility:check"
+                                size="xx-small">
+                            </lightning-icon>
+                            Uploaded
+                        </span>
+                    </template>
+                    <template if:false={executedVerified}>
+                        <span class="status-pending">Not uploaded</span>
+                    </template>
+                </div>
+
+                <lightning-input
+                    type="file"
+                    label="Select executed copy"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    data-doctype="EXECUTED"
+                    onchange={handleFileChange}
+                    disabled={executedUploading}>
+                </lightning-input>
+
+                <template if:true={executedFileName}>
+                    <p class="file-name">
+                        Selected: {executedFileName}
+                    </p>
+                </template>
+
+                <div class="action-row">
+                    <lightning-button
+                        label={executedButtonLabel}
+                        variant="brand"
+                        icon-name="utility:upload"
+                        onclick={uploadExecuted}
+                        disabled={executedUploadDisabled}>
+                    </lightning-button>
+                </div>
+
+                <template if:true={executedUploading}>
+                    <lightning-spinner
+                        alternative-text="Uploading executed copy"
+                        size="small">
+                    </lightning-spinner>
+                </template>
+            </section>
+
+        </div>
+    </lightning-card>
+</template>

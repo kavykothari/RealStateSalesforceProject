@@ -1,0 +1,148 @@
+.upload-container {
+    padding: 1.25rem;
+}
+
+.upload-header,
+.section-heading,
+.action-footer,
+.file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.upload-header {
+    margin-bottom: 1.25rem;
+}
+
+.upload-header h2,
+.section-heading h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #16325c;
+    margin: 0 0 0.35rem;
+}
+
+.upload-header p,
+.upload-subtitle,
+.footer-note {
+    color: #5f6b7a;
+    font-size: 0.8125rem;
+    margin: 0;
+}
+
+.upload-area {
+    border: 1px dashed #a8b7c7;
+    border-radius: 0.75rem;
+    background: #f8fbff;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.upload-title {
+    font-weight: 700;
+    margin: 0.75rem 0 0.25rem;
+    color: #16325c;
+}
+
+.upload-subtitle {
+    margin-bottom: 1rem;
+}
+
+.upload-area lightning-input {
+    max-width: 28rem;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.file-section {
+    margin-top: 1.5rem;
+}
+
+.section-heading {
+    margin-bottom: 0.75rem;
+}
+
+.section-heading span {
+    font-size: 0.8rem;
+    color: #5f6b7a;
+}
+
+.file-row {
+    justify-content: flex-start;
+    border: 1px solid #e5eaf0;
+    border-radius: 0.625rem;
+    padding: 0.75rem;
+    margin-bottom: 0.625rem;
+    background: #fff;
+}
+
+.file-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eef4fb;
+    border-radius: 0.5rem;
+}
+
+.file-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.file-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+    margin: 0;
+}
+
+.file-size {
+    color: #68778a;
+    font-size: 0.75rem;
+    margin: 0.25rem 0 0;
+}
+
+.remove-button {
+    --slds-c-icon-color-foreground-default: #ba0517;
+    flex-shrink: 0;
+}
+
+.action-footer {
+    border-top: 1px solid #e5eaf0;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.footer-note {
+    max-width: 70%;
+}
+
+.progress-text {
+    font-size: 0.8125rem;
+    margin: 1rem 0 0.5rem;
+    color: #16325c;
+}
+
+@media (max-width: 480px) {
+    .upload-container {
+        padding: 0.75rem;
+    }
+
+    .upload-header,
+    .action-footer {
+        align-items: flex-start;
+    }
+
+    .action-footer {
+        flex-direction: column;
+    }
+
+    .footer-note {
+        max-width: 100%;
+    }
+}

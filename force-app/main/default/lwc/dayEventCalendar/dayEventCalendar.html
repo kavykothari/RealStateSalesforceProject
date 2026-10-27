@@ -1,0 +1,694 @@
+<template>
+
+    <div class="calendar-container">
+
+        <!-- ================================================= -->
+        <!-- HEADER -->
+        <!-- ================================================= -->
+
+        <div class="calendar-header">
+
+            <div class="header-title">
+
+                <div class="calendar-icon">
+
+                    <lightning-icon
+                        icon-name="utility:event"
+                        size="small"
+                        alternative-text="Calendar">
+                    </lightning-icon>
+
+                </div>
+
+                <div>
+
+                    <h1>
+                        Calendar
+                    </h1>
+
+                    <p>
+                        {displayDate}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- DATE CONTROLS -->
+
+            <div class="calendar-controls">
+
+                <lightning-button-icon
+                    icon-name="utility:chevronleft"
+                    alternative-text="Previous Day"
+                    title="Previous Day"
+                    onclick={handlePreviousDay}>
+                </lightning-button-icon>
+
+
+                <lightning-button
+                    label="Today"
+                    variant="neutral"
+                    onclick={handleToday}>
+                </lightning-button>
+
+
+                <lightning-button-icon
+                    icon-name="utility:chevronright"
+                    alternative-text="Next Day"
+                    title="Next Day"
+                    onclick={handleNextDay}>
+                </lightning-button-icon>
+
+
+                <lightning-input
+                    type="date"
+                    variant="label-hidden"
+                    value={selectedDate}
+                    onchange={handleDateChange}
+                    class="date-picker">
+                </lightning-input>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- DAY HEADER -->
+        <!-- ================================================= -->
+
+        <div class="calendar-day-header">
+
+            <div class="timezone-column">
+                Time
+            </div>
+
+            <div class="day-column-header">
+
+                <span class="day-name">
+                    {currentDayLabel}
+                </span>
+
+                <span class="day-number">
+                    {currentDateLabel}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- LOADING -->
+        <!-- ================================================= -->
+
+        <template if:true={isLoading}>
+
+            <div class="calendar-loading">
+
+                <lightning-spinner
+                    alternative-text="Loading events"
+                    size="medium">
+                </lightning-spinner>
+
+            </div>
+
+        </template>
+
+
+        <!-- ================================================= -->
+        <!-- CALENDAR -->
+        <!-- ================================================= -->
+
+        <template if:false={isLoading}>
+
+            <div class="calendar-body">
+
+
+                <!-- ========================================= -->
+                <!-- ALL DAY EVENTS -->
+                <!-- ========================================= -->
+
+                <template if:true={hasAllDayEvents}>
+
+                    <div class="all-day-section">
+
+                        <div class="all-day-label">
+                            All Day
+                        </div>
+
+                        <div class="all-day-events">
+
+                            <template
+                                for:each={allDayEvents}
+                                for:item="event">
+
+
+                                <div
+                                    key={event.Id}
+                                    class="all-day-event"
+                                    data-id={event.Id}
+                                    onclick={handleEventClick}>
+
+
+                                    <lightning-icon
+                                        icon-name="utility:event"
+                                        size="xx-small"
+                                        alternative-text="Event">
+                                    </lightning-icon>
+
+
+                                    <span
+                                        title={event.Subject}>
+
+                                        {event.Subject}
+
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </div>
+
+                </template>
+
+
+                <!-- ========================================= -->
+                <!-- TIMELINE -->
+                <!-- ========================================= -->
+
+                <div class="timeline">
+
+
+                    <!-- TIME COLUMN -->
+
+                    <div class="time-column">
+
+                        <template
+                            for:each={hours}
+                            for:item="hour">
+
+
+                            <div
+                                key={hour.key}
+                                class="time-label"
+                                style={hour.style}>
+
+                                {hour.label}
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- DAY COLUMN -->
+
+                    <div class="day-column">
+
+
+                        <!-- HOUR GRID -->
+
+                        <template
+                            for:each={hours}
+                            for:item="hour">
+
+
+                            <div
+                                key={hour.key}
+                                class="hour-slot">
+
+                            </div>
+
+                        </template>
+
+
+                        <!-- EVENTS -->
+
+                        <div class="events-layer">
+
+                            <template
+                                for:each={timedEvents}
+                                for:item="event">
+
+
+                                <div
+                                    key={event.Id}
+                                    class={event.eventClass}
+                                    style={event.style}
+                                    data-id={event.Id}
+                                    onclick={handleEventClick}>
+
+
+                                    <div class="event-content">
+
+                                        <div
+                                            class="event-subject"
+                                            title={event.Subject}>
+
+                                            {event.Subject}
+
+                                        </div>
+
+
+                                        <div class="event-time">
+
+                                            {event.formattedStart}
+
+                                            <span>
+                                                -
+                                            </span>
+
+                                            {event.formattedEnd}
+
+                                        </div>
+
+
+                                        <template if:true={event.Location}>
+
+                                            <div
+                                                class="event-location"
+                                                title={event.Location}>
+
+                                                {event.Location}
+
+                                            </div>
+
+                                        </template>
+
+                                    </div>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </template>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- EVENT DETAILS MODAL -->
+    <!-- ===================================================== -->
+
+    <template if:true={showEventModal}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="event-modal-heading"
+            class="slds-modal slds-fade-in-open">
+
+
+            <div class="slds-modal__container event-modal">
+
+
+                <!-- HEADER -->
+
+                <header class="slds-modal__header event-modal-header">
+
+
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close"
+                        title="Close"
+                        onclick={closeEventModal}>
+
+
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="small">
+                        </lightning-icon>
+
+
+                        <span class="slds-assistive-text">
+                            Close
+                        </span>
+
+                    </button>
+
+
+                    <div class="event-modal-icon">
+
+                        <lightning-icon
+                            icon-name="utility:event"
+                            size="small"
+                            alternative-text="Event">
+                        </lightning-icon>
+
+                    </div>
+
+
+                    <h2
+                        id="event-modal-heading"
+                        class="slds-text-heading_medium">
+
+                        Event Details
+
+                    </h2>
+
+
+                    <template if:true={selectedEvent}>
+
+                        <p class="event-modal-subject">
+
+                            {selectedEvent.Subject}
+
+                        </p>
+
+                    </template>
+
+                </header>
+
+
+                <!-- BODY -->
+
+                <div class="slds-modal__content event-modal-body">
+
+
+                    <template if:true={selectedEvent}>
+
+
+                        <div class="event-info-grid">
+
+
+                            <!-- EVENT ID -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Event ID
+                                </span>
+
+                                <a
+                                    href={selectedEvent.eventUrl}
+                                    target="_blank"
+                                    class="info-link">
+
+                                    {selectedEvent.Id}
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- SUBJECT -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Subject
+                                </span>
+
+                                <span class="info-value">
+                                    {selectedEvent.Subject}
+                                </span>
+
+                            </div>
+
+
+                            <!-- START -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Start
+                                </span>
+
+                                <span class="info-value">
+
+                                    {selectedEvent.formattedStart}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- END -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    End
+                                </span>
+
+                                <span class="info-value">
+
+                                    {selectedEvent.formattedEnd}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- NAME -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Name
+                                </span>
+
+
+                                <template
+                                    if:true={selectedEvent.nameUrl}>
+
+
+                                    <a
+                                        href={selectedEvent.nameUrl}
+                                        target="_blank"
+                                        class="info-link">
+
+                                        {selectedEvent.nameValue}
+
+                                    </a>
+
+                                </template>
+
+
+                                <template
+                                    if:false={selectedEvent.nameUrl}>
+
+
+                                    <span
+                                        class="info-value empty-value">
+
+                                        Not specified
+
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- RELATED TO -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Related To
+                                </span>
+
+
+                                <template
+                                    if:true={selectedEvent.relatedToUrl}>
+
+
+                                    <a
+                                        href={selectedEvent.relatedToUrl}
+                                        target="_blank"
+                                        class="info-link">
+
+                                        {selectedEvent.relatedToName}
+
+                                    </a>
+
+                                </template>
+
+
+                                <template
+                                    if:false={selectedEvent.relatedToUrl}>
+
+
+                                    <span
+                                        class="info-value empty-value">
+
+                                        Not specified
+
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- LOCATION -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Location
+                                </span>
+
+
+                                <template if:true={selectedEvent.Location}>
+
+                                    <span class="info-value">
+
+                                        {selectedEvent.Location}
+
+                                    </span>
+
+                                </template>
+
+
+                                <template if:false={selectedEvent.Location}>
+
+                                    <span class="info-value empty-value">
+
+                                        No location
+
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- OWNER -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Owner
+                                </span>
+
+                                <span class="info-value">
+
+                                    {selectedEvent.ownerName}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- ALL DAY -->
+
+                            <div class="info-card">
+
+                                <span class="info-label">
+                                    Event Type
+                                </span>
+
+                                <span class="info-value">
+
+                                    <template
+                                        if:true={selectedEvent.IsAllDayEvent}>
+
+                                        All Day
+
+                                    </template>
+
+                                    <template
+                                        if:false={selectedEvent.IsAllDayEvent}>
+
+                                        Time Based
+
+                                    </template>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="description-card">
+
+                            <span class="info-label">
+                                Description
+                            </span>
+
+
+                            <template if:true={selectedEvent.Description}>
+
+                                <div class="description-text">
+
+                                    {selectedEvent.Description}
+
+                                </div>
+
+                            </template>
+
+
+                            <template if:false={selectedEvent.Description}>
+
+                                <div class="description-text empty-value">
+
+                                    No description available.
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+
+                    </template>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <footer class="slds-modal__footer event-modal-footer">
+
+                    <lightning-button
+                        label="Close"
+                        variant="neutral"
+                        onclick={closeEventModal}>
+                    </lightning-button>
+
+
+                    <template if:true={selectedEvent}>
+
+                        <lightning-button
+                            label="Open Event"
+                            variant="brand"
+                            icon-name="utility:open"
+                            onclick={handleOpenEvent}>
+                        </lightning-button>
+
+                    </template>
+
+                </footer>
+
+            </div>
+
+        </section>
+
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </template>
+
+</template>

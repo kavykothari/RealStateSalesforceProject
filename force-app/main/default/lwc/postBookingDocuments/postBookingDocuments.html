@@ -1,0 +1,105 @@
+<template>
+    <lightning-card title="Post-Booking Documents" icon-name="standard:contract">
+        <div class="slds-p-around_medium">
+            <div class="intro">
+                <p>Manage documents required after the flat booking is confirmed.</p>
+                <p class="hint">
+                    Upload drafts, executed copies, payment receipts and supporting documents.
+                </p>
+            </div>
+
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Uploading document"
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+            <template for:each={visibleGroups} for:item="group">
+                <section key={group.id} class="document-card">
+                    <div class="card-header">
+                        <div class="header-icon">
+                            <lightning-icon
+                                icon-name={group.icon}
+                                size="small">
+                            </lightning-icon>
+                        </div>
+
+                        <div class="header-content">
+                            <h2>{group.title}</h2>
+                            <p>{group.description}</p>
+                        </div>
+
+                        <span class={group.statusClass}>
+                            {group.statusLabel}
+                        </span>
+                    </div>
+
+                    <template for:each={group.documents} for:item="doc">
+                        <div key={doc.id} class="document-row">
+                            <div class="document-info">
+                                <div class="document-title">{doc.label}</div>
+                                <div class="document-description">
+                                    {doc.description}
+                                </div>
+
+                                <template if:true={doc.fileName}>
+                                    <div class="selected-file">
+                                        <lightning-icon
+                                            icon-name="doctype:attachment"
+                                            size="x-small">
+                                        </lightning-icon>
+                                        <span>{doc.fileName}</span>
+                                    </div>
+                                </template>
+
+                                <template if:true={doc.uploaded}>
+                                    <div class="success-text">
+                                        <lightning-icon
+                                            icon-name="utility:success"
+                                            size="x-small">
+                                        </lightning-icon>
+                                        Uploaded successfully
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="upload-actions">
+                                <lightning-input
+                                    type="file"
+                                    label="Choose file"
+                                    accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+                                    data-group-id={group.id}
+                                    data-title={doc.label}
+                                    data-document-id={doc.id}
+                                    onchange={handleFileChange}>
+                                </lightning-input>
+
+                                <lightning-button
+                                    label={doc.buttonLabel}
+                                    variant="brand"
+                                    data-group-id={group.id}
+                                    data-document-id={doc.id}
+                                    disabled={doc.uploadDisabled}
+                                    data-title={doc.label}
+                                    onclick={handleUpload}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </template>
+                </section>
+            </template>
+
+            <div class="footer-note">
+                <lightning-icon
+                    icon-name="utility:info"
+                    size="x-small">
+                </lightning-icon>
+                <span>
+                    Home loan documents are optional. Upload signed or registered
+                    copies only when they are available.
+                </span>
+            </div>
+        </div>
+    </lightning-card>
+</template>

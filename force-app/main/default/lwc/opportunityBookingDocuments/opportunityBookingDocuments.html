@@ -1,0 +1,116 @@
+<template>
+    <lightning-card>
+        <div class="header">
+            <div class="header-icon">
+                <lightning-icon
+                    icon-name="standard:document"
+                    size="medium"
+                    alternative-text="Booking documents">
+                </lightning-icon>
+            </div>
+
+            <div class="header-text">
+                <h2>Booking Documents</h2>
+                <p>Upload all five required booking documents.</p>
+            </div>
+
+            <div class="progress">
+                {selectedCount}/5
+            </div>
+        </div>
+
+        <div class="document-list">
+            <template for:each={documents} for:item="doc">
+                <div class="document-card" key={doc.key}>
+                    <div class="document-icon">
+                        <lightning-icon
+                            icon-name={doc.icon}
+                            size="small"
+                            alternative-text="Document">
+                        </lightning-icon>
+                    </div>
+
+                    <div class="document-info">
+                        <div class="document-title">
+                            {doc.label}
+                            <span class="required">*</span>
+                        </div>
+
+                        <template if:true={doc.fileName}>
+                            <div class="file-selected">
+                                <lightning-icon
+                                    icon-name="utility:check"
+                                    size="xx-small"
+                                    alternative-text="Selected">
+                                </lightning-icon>
+                                <span title={doc.fileName}>
+                                    {doc.fileName}
+                                </span>
+                                <span class="file-size">
+                                    {doc.fileSizeLabel}
+                                </span>
+                            </div>
+                        </template>
+
+                        <template if:false={doc.fileName}>
+                            <p class="file-hint">
+                                PDF, Word or image file
+                            </p>
+                        </template>
+
+                        <div class="file-actions">
+                            <lightning-input
+                                type="file"
+                                variant="label-hidden"
+                                accept={acceptedFormats}
+                                data-key={doc.key}
+                                onchange={handleFileChange}
+                                disabled={isUploading}>
+                            </lightning-input>
+
+                            <template if:true={doc.fileName}>
+                                <lightning-button-icon
+                                    icon-name="utility:delete"
+                                    alternative-text="Remove file"
+                                    title="Remove file"
+                                    data-key={doc.key}
+                                    onclick={handleRemove}
+                                    disabled={isUploading}>
+                                </lightning-button-icon>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="footer">
+            <div class="footer-note">
+                <lightning-icon
+                    icon-name="utility:lock"
+                    size="xx-small"
+                    alternative-text="Secure">
+                </lightning-icon>
+                Files are saved to Salesforce only after you click Save.
+            </div>
+
+            <lightning-button
+                label="Save & Attach Documents"
+                variant="brand"
+                icon-name="utility:save"
+                onclick={handleSave}
+                disabled={isSaveDisabled}>
+            </lightning-button>
+        </div>
+
+        <template if:true={isUploading}>
+            <div class="uploading">
+                <lightning-spinner
+                    alternative-text="Uploading documents"
+                    size="medium">
+                </lightning-spinner>
+                <p>{uploadStatus}</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

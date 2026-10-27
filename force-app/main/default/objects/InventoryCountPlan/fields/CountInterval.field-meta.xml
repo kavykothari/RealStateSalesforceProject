@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CountInterval</fullName>
+    <inlineHelpText>The interval between the planned start dates of two consecutive assessments related to this plan. For example, if the Count Interval is 5 and the Count Interval Unit of Measure is Monthly, then the interval between the planned start dates of the assessments is five months.</inlineHelpText>
+    <trackHistory>false</trackHistory>
+</CustomField>

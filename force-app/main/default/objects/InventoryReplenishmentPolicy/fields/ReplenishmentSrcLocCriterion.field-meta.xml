@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ReplenishmentSrcLocCriterion</fullName>
+    <inlineHelpText>The basis of determining the location from where the product item is replenished. To use Product Fulfillment Location records to determine the location, select Product Fulfillment Location. To specify a particular location, select Replenishment Source Location and fill the Replenishment Source Location field.</inlineHelpText>
+    <trackHistory>false</trackHistory>
+</CustomField>

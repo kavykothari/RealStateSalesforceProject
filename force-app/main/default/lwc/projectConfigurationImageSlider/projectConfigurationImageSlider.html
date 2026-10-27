@@ -1,0 +1,267 @@
+<template>
+
+    <div class="gallery-container">
+
+        <!-- ================================
+             HEADER
+        ================================= -->
+
+        <div class="gallery-header">
+
+            <div class="header-left">
+
+                <div class="gallery-icon">
+                    <lightning-icon
+                        icon-name="standard:photo"
+                        size="small"
+                        alternative-text="Gallery">
+                    </lightning-icon>
+                </div>
+
+                <div>
+                    <div class="gallery-title">
+                        Property Gallery
+                    </div>
+
+                    <div class="gallery-subtitle">
+                        Explore configuration views
+                    </div>
+                </div>
+
+            </div>
+
+            <template if:true={images.length}>
+                <div class="image-counter">
+                    {currentIndexDisplay} / {images.length}
+                </div>
+            </template>
+
+        </div>
+
+
+        <!-- ================================
+             LOADING
+        ================================= -->
+
+        <template if:true={isLoading}>
+
+            <div class="loading-container">
+
+                <lightning-spinner
+                    alternative-text="Loading images"
+                    size="medium">
+                </lightning-spinner>
+
+                <span>Loading gallery...</span>
+
+            </div>
+
+        </template>
+
+
+        <!-- ================================
+             GALLERY
+        ================================= -->
+
+        <template if:false={isLoading}>
+
+            <template if:true={hasImages}>
+
+                <div class="slider">
+
+                    <!-- IMAGE -->
+
+                    <div class="image-wrapper">
+
+                        <img
+                            src={currentImage.imageUrl}
+                            alt={currentImage.title}
+                            class="main-image"
+                            onerror={handleImageError}
+                        />
+
+                        <!-- Previous -->
+
+                        <button
+                            class="navigation-button previous"
+                            onclick={handlePrevious}
+                            title="Previous image">
+
+                            <lightning-icon
+                                icon-name="utility:chevronleft"
+                                alternative-text="Previous"
+                                size="small">
+                            </lightning-icon>
+
+                        </button>
+
+
+                        <!-- Next -->
+
+                        <button
+                            class="navigation-button next"
+                            onclick={handleNext}
+                            title="Next image">
+
+                            <lightning-icon
+                                icon-name="utility:chevronright"
+                                alternative-text="Next"
+                                size="small">
+                            </lightning-icon>
+
+                        </button>
+
+
+                        <!-- Image title -->
+
+                        <div class="image-overlay">
+
+                            <div class="image-title">
+                                {currentImage.title}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================
+                         CONFIGURATION INFO
+                    ================================= -->
+
+                    <div class="configuration-info">
+
+                        <div class="configuration-name">
+                            {currentImage.configurationName}
+                        </div>
+
+                        <div class="property-details">
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Area
+                                </span>
+
+                                <span class="detail-value">
+                                    {currentImage.sqFt}
+                                    <span class="unit">
+                                        Sq. Ft.
+                                    </span>
+                                </span>
+
+                            </div>
+
+
+                            <div class="divider"></div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Balconies
+                                </span>
+
+                                <span class="detail-value">
+                                    {currentImage.balconies}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================
+                         THUMBNAILS
+                    ================================= -->
+
+                    <div class="thumbnail-container">
+
+                        <template
+                            for:each={images}
+                            for:item="image"
+                            for:index="index">
+
+                            <button
+                                key={image.contentVersionId}
+                                class={image.thumbnailClass}
+                                data-index={index}
+                                onclick={handleThumbnail}>
+
+                                <img
+                                    src={image.imageUrl}
+                                    alt={image.title}
+                                />
+
+                            </button>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- ================================
+                         DOTS
+                    ================================= -->
+
+                    <div class="dots">
+
+                        <template
+                            for:each={images}
+                            for:item="image"
+                            for:index="index">
+
+                            <button
+                                key={image.contentVersionId}
+                                class={image.dotClass}
+                                data-index={index}
+                                onclick={handleThumbnail}>
+                            </button>
+
+                        </template>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- ================================
+                 NO IMAGES
+            ================================= -->
+
+            <template if:false={hasImages}>
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <lightning-icon
+                            icon-name="utility:image"
+                            size="large"
+                            alternative-text="No images">
+                        </lightning-icon>
+
+                    </div>
+
+                    <div class="empty-title">
+                        No Property Images
+                    </div>
+
+                    <div class="empty-description">
+                        Add images to the Project Configuration
+                        Files related list to display them here.
+                    </div>
+
+                </div>
+
+            </template>
+
+        </template>
+
+    </div>
+
+</template>

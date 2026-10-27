@@ -1,0 +1,271 @@
+<template>
+    <lightning-card title="Booking Documents" icon-name="standard:file">
+
+        <div class="main-container">
+
+            <!-- Loading indicator -->
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading booking documents"
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+            <!-- Document verification -->
+            <section class="verification-panel">
+                <div class="verification-heading">
+                    <lightning-icon
+                        icon-name="utility:shield"
+                        size="small">
+                    </lightning-icon>
+
+                    <span>Document Verification</span>
+                </div>
+
+                <lightning-input
+                    type="checkbox"
+                    label="All Documents Verified"
+                    checked={documentsVerified}
+                    disabled={documentsVerified}
+                    onchange={handleVerificationChange}>
+                </lightning-input>
+
+                <div class="warning-text">
+                    <lightning-icon
+                        icon-name="utility:warning"
+                        size="x-small">
+                    </lightning-icon>
+
+                    <span>
+                        Please verify all documents carefully before checking
+                        this box. Once verified, this action cannot be undone.
+                        You will no longer be able to replace files through
+                        this component.
+                    </span>
+                </div>
+
+                <template if:true={documentsVerified}>
+                    <div class="verified-status">
+                        <lightning-icon
+                            icon-name="utility:success"
+                            size="small">
+                        </lightning-icon>
+
+                        <span>
+                            All documents verified. File replacement is locked.
+                        </span>
+                    </div>
+                </template>
+            </section>
+
+            <!-- Document list heading -->
+            <div class="section-heading">
+                <div>
+                    <h2>Attached Documents</h2>
+                    <p>Documents linked to the related Opportunity</p>
+                </div>
+
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    alternative-text="Refresh documents"
+                    title="Refresh documents"
+                    onclick={handleRefresh}
+                    disabled={isBusy}>
+                </lightning-button-icon>
+            </div>
+
+            <!-- File list -->
+            <template if:true={hasFiles}>
+                <div class="file-list">
+
+                    <template for:each={files} for:item="file">
+                        <div
+                            class="file-row"
+                            key={file.contentDocumentId}>
+
+                            <!-- File icon -->
+                            <div class="file-icon">
+                                <lightning-icon
+                                    icon-name="doctype:attachment"
+                                    size="medium">
+                                </lightning-icon>
+                            </div>
+
+                            <!-- File details -->
+                            <div class="file-details">
+                                <a
+                                    href="javascript:void(0);"
+                                    class="file-name"
+                                    data-id={file.contentDocumentId}
+                                    data-title={file.title}
+                                    onclick={handleFileNameClick}
+                                    title="Preview file"
+                                >
+                                    {file.title}
+                                </a>
+
+                                <div class="file-meta">
+                                    <span>{file.fileType}</span>
+                                    <span>{file.fileSize}</span>
+                                    <span>{file.createdByName}</span>
+                                </div>
+                            </div>
+
+                            <!-- File actions -->
+                            <div class="file-actions">
+
+                                <!-- Before verification -->
+                                <template if:false={documentsVerified}>
+
+                                    <!-- Show Replace File button -->
+                                    <template if:false={file.showPicker}>
+                                        <lightning-button
+                                            label="Replace File"
+                                            title="Replace this document"
+                                            icon-name="utility:upload"
+                                            variant="brand-outline"
+                                            data-file-id={file.contentDocumentId}
+                                            onclick={handleReplaceClick}
+                                            disabled={isBusy}>
+                                        </lightning-button>
+                                    </template>
+
+                                    <!-- Show picker after clicking Replace File -->
+                                    <template if:true={file.showPicker}>
+                                        <div class="replacement-picker">
+
+                                            <lightning-input
+                                                type="file"
+                                                label="Choose replacement file"
+                                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                                data-file-id={file.contentDocumentId}
+                                                onchange={handleFileSelection}
+                                                disabled={isBusy}>
+                                            </lightning-input>
+
+                                            <div class="picker-actions">
+                                                <lightning-button
+                                                    label="Cancel"
+                                                    variant="neutral"
+                                                    data-file-id={file.contentDocumentId}
+                                                    onclick={handleCancelReplace}
+                                                    disabled={isBusy}>
+                                                </lightning-button>
+                                            </div>
+
+                                        </div>
+                                    </template>
+
+                                </template>
+
+                                <!-- After verification -->
+                                <template if:true={documentsVerified}>
+                                    <span class="locked-label">
+                                        <lightning-icon
+                                            icon-name="utility:lock"
+                                            size="xx-small">
+                                        </lightning-icon>
+
+                                        Locked
+                                    </span>
+                                </template>
+
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+            </template>
+
+            <!-- No files -->
+            <template if:false={hasFiles}>
+                <template if:false={isLoading}>
+                    <div class="empty-state">
+                        <lightning-icon
+                            icon-name="utility:open_folder"
+                            size="large">
+                        </lightning-icon>
+
+                        <p>
+                            No documents found on the related Opportunity.
+                        </p>
+                    </div>
+                </template>
+            </template>
+
+            <!-- Upload/verification operation in progress -->
+            <template if:true={isBusy}>
+                <div class="busy-message">
+                    <lightning-spinner
+                        alternative-text="Processing document"
+                        size="small">
+                    </lightning-spinner>
+
+                    <span>Please wait while the document is processed...</span>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+    <!-- File Preview Modal -->
+        <template if:true={isPreviewModalOpen}>
+            <section
+                role="dialog"
+                tabindex="-1"
+                aria-modal="true"
+                aria-label="File Preview"
+                class="slds-modal slds-fade-in-open preview-modal"
+            >
+                <div class="slds-modal__container preview-modal-container">
+
+                    <!-- Modal Header -->
+                    <header class="slds-modal__header preview-header">
+                        <h2 class="slds-modal__title slds-hyphenate">
+                            {previewTitle}
+                        </h2>
+
+                        <button
+                            class="slds-button slds-button_icon slds-modal__close"
+                            title="Close"
+                            onclick={closePreviewModal}
+                        >
+                            <lightning-icon
+                                icon-name="utility:close"
+                                alternative-text="Close"
+                                size="small"
+                            ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </header>
+
+                    <!-- Modal Body -->
+                    <div class="slds-modal__content preview-content">
+
+                        <template if:true={previewUrl}>
+                            <iframe
+                                src={previewUrl}
+                                title={previewTitle}
+                                class="preview-iframe"
+                            ></iframe>
+                        </template>
+
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <footer class="slds-modal__footer preview-footer">
+                        <lightning-button
+                            label="Close"
+                            variant="neutral"
+                            onclick={closePreviewModal}
+                        ></lightning-button>
+                    </footer>
+
+                </div>
+            </section>
+
+            <div
+                class="slds-backdrop slds-backdrop_open"
+                onclick={closePreviewModal}
+            ></div>
+        </template>
+</template>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ProductReferenceRecordId</fullName>
+    <inlineHelpText>The product or the product category of the product items to which this policy applies. The policy with the most closely matching combination of product reference record and location applies to a product item. For example, a policy with the matching product and location overrides a policy with the matching product category and location.</inlineHelpText>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,524 @@
+/* ============================================================
+   MAIN CONTAINER
+============================================================ */
+
+.gallery-container {
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8e8e8;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #172554 0%,
+            #1e3a8a 50%,
+            #2563eb 100%
+        );
+
+    color: white;
+}
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+
+.gallery-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.16);
+
+    border-radius: 12px;
+
+    backdrop-filter: blur(10px);
+}
+
+
+.gallery-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+
+.gallery-subtitle {
+    margin-top: 3px;
+    font-size: 12px;
+    opacity: 0.78;
+}
+
+
+.image-counter {
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    backdrop-filter: blur(8px);
+}
+
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+.loading-container {
+    height: 350px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 20px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   SLIDER
+============================================================ */
+
+.slider {
+    width: 100%;
+}
+
+
+/* ============================================================
+   IMAGE
+============================================================ */
+
+.image-wrapper {
+    position: relative;
+
+    width: 100%;
+    height: 430px;
+
+    overflow: hidden;
+
+    background: #0f172a;
+}
+
+
+.main-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition:
+        transform 0.5s ease,
+        opacity 0.3s ease;
+}
+
+
+.image-wrapper:hover .main-image {
+    transform: scale(1.015);
+}
+
+
+/* ============================================================
+   IMAGE OVERLAY
+============================================================ */
+
+.image-overlay {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding: 45px 24px 20px;
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(0, 0, 0, 0.78)
+        );
+}
+
+
+.image-title {
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    text-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ============================================================
+   NAVIGATION BUTTONS
+============================================================ */
+
+.navigation-button {
+    position: absolute;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 44px;
+    height: 44px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.88);
+
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.navigation-button:hover {
+    background: #ffffff;
+
+    transform:
+        translateY(-50%)
+        scale(1.08);
+}
+
+
+.navigation-button.previous {
+    left: 18px;
+}
+
+
+.navigation-button.next {
+    right: 18px;
+}
+
+
+/* ============================================================
+   CONFIGURATION INFORMATION
+============================================================ */
+
+.configuration-info {
+    padding: 18px 22px;
+
+    background: #ffffff;
+}
+
+
+.configuration-name {
+    font-size: 17px;
+
+    font-weight: 700;
+
+    color: #172554;
+
+    margin-bottom: 15px;
+}
+
+
+.property-details {
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+}
+
+
+.detail-item {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.detail-label {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+
+    font-weight: 600;
+}
+
+
+.detail-value {
+    color: #0f172a;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+
+.unit {
+    font-size: 11px;
+
+    color: #64748b;
+
+    font-weight: 500;
+}
+
+
+.divider {
+    height: 38px;
+
+    width: 1px;
+
+    background: #e2e8f0;
+}
+
+
+/* ============================================================
+   THUMBNAILS
+============================================================ */
+
+.thumbnail-container {
+    display: flex;
+
+    gap: 10px;
+
+    padding: 0 22px 16px;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+}
+
+
+.thumbnail {
+    flex: 0 0 76px;
+
+    width: 76px;
+
+    height: 58px;
+
+    padding: 0;
+
+    border: 2px solid transparent;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    background: #f1f5f9;
+
+    transition:
+        border 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.thumbnail:hover {
+    transform: translateY(-2px);
+}
+
+
+.thumbnail.active {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 3px 10px rgba(37, 99, 235, 0.25);
+}
+
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* ============================================================
+   DOTS
+============================================================ */
+
+.dots {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 0 18px;
+}
+
+
+.dot {
+    width: 7px;
+    height: 7px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #cbd5e1;
+
+    cursor: pointer;
+
+    transition:
+        width 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.dot.active {
+    width: 22px;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state {
+    min-height: 350px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f8fafc
+        );
+}
+
+
+.empty-icon {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+
+    margin-bottom: 18px;
+}
+
+
+.empty-title {
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: #1e293b;
+
+    margin-bottom: 8px;
+}
+
+
+.empty-description {
+    max-width: 400px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .image-wrapper {
+        height: 300px;
+    }
+
+    .gallery-header {
+        padding: 14px 16px;
+    }
+
+    .configuration-info {
+        padding: 15px 16px;
+    }
+
+    .thumbnail-container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .navigation-button {
+        width: 38px;
+        height: 38px;
+    }
+}

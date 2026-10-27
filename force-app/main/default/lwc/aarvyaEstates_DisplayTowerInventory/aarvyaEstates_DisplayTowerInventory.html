@@ -1,0 +1,463 @@
+<template>
+    <div class="inventory-page">
+
+        <template if:true={isLoading}>
+            <div class="loading-overlay">
+                <lightning-spinner
+                    alternative-text="Loading inventory"
+                    size="medium">
+                </lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={hasError}>
+            <section class="error-state">
+                <lightning-icon
+                    icon-name="utility:error"
+                    size="small"
+                    alternative-text="Error">
+                </lightning-icon>
+                <span>{error}</span>
+            </section>
+        </template>
+
+        <template if:true={inventory}>
+
+            <!-- HEADER -->
+            <header class="inventory-header">
+
+                <div class="title-block">
+                    <h1>{towerName}</h1>
+                    <div class="subtitle">UNIT INVENTORY</div>
+                </div>
+
+                <div class="metrics">
+
+                    <div class="metric metric-neutral">
+                        <div class="metric-icon">
+                            <lightning-icon
+                                icon-name="utility:company"
+                                size="small"
+                                alternative-text="Floors">
+                            </lightning-icon>
+                        </div>
+
+                        <div>
+                            <strong>{totalFloors}</strong>
+                            <span>Total Floors</span>
+                        </div>
+                    </div>
+
+                    <div class="metric metric-neutral">
+                        <div class="metric-icon">
+                            <lightning-icon
+                                icon-name="utility:product"
+                                size="small"
+                                alternative-text="Units">
+                            </lightning-icon>
+                        </div>
+
+                        <div>
+                            <strong>{totalUnits}</strong>
+                            <span>Total Units</span>
+                        </div>
+                    </div>
+
+                    <div class="metric metric-available">
+                        <div class="status-dot"></div>
+
+                        <div>
+                            <strong>{availableCount}</strong>
+                            <span>Available</span>
+                        </div>
+                    </div>
+
+                    <div class="metric metric-hold">
+                        <div class="status-dot"></div>
+
+                        <div>
+                            <strong>{onHoldCount}</strong>
+                            <span>On Hold</span>
+                        </div>
+                    </div>
+
+                    <div class="metric metric-booked">
+                        <div class="status-dot"></div>
+
+                        <div>
+                            <strong>{bookedCount}</strong>
+                            <span>Booked</span>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- FILTER PANEL -->
+            <section class="filter-panel">
+
+                <div class="filter-grid">
+
+                    <div class="search-field">
+
+                        <lightning-icon
+                            icon-name="utility:search"
+                            size="x-small"
+                            alternative-text="Search">
+                        </lightning-icon>
+
+                        <input
+                            type="search"
+                            value={searchTerm}
+                            placeholder="Search Unit No. / Flat Code"
+                            oninput={handleSearch}
+                        />
+
+                    </div>
+
+                    <lightning-combobox
+                        label="Configuration"
+                        variant="label-stacked"
+                        value={configurationFilter}
+                        options={configurationOptions}
+                        data-field="configurationFilter"
+                        onchange={handleFilterChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Availability"
+                        variant="label-stacked"
+                        value={availabilityFilter}
+                        options={availabilityOptions}
+                        data-field="availabilityFilter"
+                        onchange={handleFilterChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Facing"
+                        variant="label-stacked"
+                        value={facingFilter}
+                        options={facingOptions}
+                        data-field="facingFilter"
+                        onchange={handleFilterChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="View"
+                        variant="label-stacked"
+                        value={viewFilter}
+                        options={viewOptions}
+                        data-field="viewFilter"
+                        onchange={handleFilterChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Floor"
+                        variant="label-stacked"
+                        value={floorFilter}
+                        options={floorOptions}
+                        data-field="floorFilter"
+                        onchange={handleFilterChange}>
+                    </lightning-combobox>
+
+                    <template if:true={showMoreFilters}>
+
+                        <lightning-combobox
+                            label="Possession Status"
+                            variant="label-stacked"
+                            value={possessionFilter}
+                            options={possessionOptions}
+                            data-field="possessionFilter"
+                            onchange={handleFilterChange}>
+                        </lightning-combobox>
+
+                        <lightning-combobox
+                            label="Construction Status"
+                            variant="label-stacked"
+                            value={constructionFilter}
+                            options={constructionOptions}
+                            data-field="constructionFilter"
+                            onchange={handleFilterChange}>
+                        </lightning-combobox>
+
+                    </template>
+
+                    <div class="filter-actions">
+
+                        <button
+                            class="more-filter-button"
+                            type="button"
+                            onclick={toggleMoreFilters}>
+
+                            <lightning-icon
+                                icon-name="utility:filterList"
+                                size="x-small"
+                                alternative-text="More Filters">
+                            </lightning-icon>
+
+                            <span>More Filters</span>
+
+                            <lightning-icon
+                                icon-name={moreFiltersIcon}
+                                size="xx-small"
+                                alternative-text="Toggle">
+                            </lightning-icon>
+
+                        </button>
+
+                        <span class="divider"></span>
+
+                        <button
+                            class="clear-button"
+                            type="button"
+                            onclick={clearFilters}>
+
+                            <lightning-icon
+                                icon-name="utility:refresh"
+                                size="x-small"
+                                alternative-text="Clear">
+                            </lightning-icon>
+
+                            <span>Clear Filters</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- FLOOR NAVIGATION -->
+            <section class="floor-toolbar">
+
+                <div class="floor-label">
+                    Floors
+                </div>
+
+                <button
+                    class="arrow-button"
+                    type="button"
+                    onclick={previousRange}
+                    title="Previous floors">
+
+                    <lightning-icon
+                        icon-name="utility:chevronleft"
+                        size="x-small"
+                        alternative-text="Previous">
+                    </lightning-icon>
+
+                </button>
+
+                <template
+                    for:each={rangeOptions}
+                    for:item="range">
+
+                    <button
+                        key={range.label}
+                        class={range.cssClass}
+                        data-start={range.start}
+                        data-end={range.end}
+                        type="button"
+                        onclick={selectRange}>
+
+                        {range.label}
+
+                    </button>
+
+                </template>
+
+                <button
+                    class="arrow-button"
+                    type="button"
+                    onclick={nextRange}
+                    title="Next floors">
+
+                    <lightning-icon
+                        icon-name="utility:chevronright"
+                        size="x-small"
+                        alternative-text="Next">
+                    </lightning-icon>
+
+                </button>
+
+                <div class="range-spacer"></div>
+
+                <span class="range-summary">
+                    {rangeLabel}
+                </span>
+
+                <span class="toolbar-divider"></span>
+
+                <label
+                    class="jump-label"
+                    for="floorJump">
+
+                    Go to floor
+
+                </label>
+
+                <input
+                    id="floorJump"
+                    class="jump-input"
+                    type="number"
+                    min="1"
+                    max={totalFloors}
+                    placeholder="e.g. 12"
+                    value={floorJump}
+                    oninput={handleFloorJump}
+                />
+
+                <button
+                    class="go-button"
+                    type="button"
+                    onclick={goToFloor}>
+
+                    Go
+
+                </button>
+
+            </section>
+
+            <!-- INVENTORY MATRIX -->
+            <template if:true={hasFloors}>
+
+                <section class="matrix-wrapper">
+
+                    <div
+                        class="matrix-header"
+                        style={matrixGridStyle}>
+
+                        <div class="corner-header">
+                            Floor \ Unit
+                        </div>
+
+                        <template
+                            for:each={unitColumnHeaders}
+                            for:item="header">
+
+                            <div
+                                class="column-header"
+                                key={header.key}>
+
+                                {header.label}
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+                    <template
+                        for:each={visibleFloors}
+                        for:item="floor">
+
+                        <div
+                            class="matrix-row"
+                            style={matrixGridStyle}
+                            key={floor.id}>
+
+                            <div class="floor-number">
+                                {floor.floorNumber}
+                            </div>
+
+                            <template
+                                for:each={floor.units}
+                                for:item="unit">
+
+                                <div
+    class={unit.cssClass}
+    key={unit.key}
+    data-unit-id={unit.id}
+    onclick={handleUnitClick}>
+
+                                    <template if:false={unit.isEmpty}>
+
+                                        <strong>
+                                            {unit.unitNumber}
+                                        </strong>
+
+                                        <span>
+                                            {unit.configuration}
+                                        </span>
+
+                                    </template>
+
+                                    <template if:true={unit.isEmpty}>
+
+                                        <span>—</span>
+
+                                    </template>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </template>
+
+                </section>
+
+            </template>
+
+            <!-- NO RESULTS -->
+            <template if:false={hasFloors}>
+
+                <section class="empty-state">
+
+                    <lightning-icon
+                        icon-name="utility:search"
+                        size="small"
+                        alternative-text="No results">
+                    </lightning-icon>
+
+                    <p>{emptyMessage}</p>
+
+                </section>
+
+            </template>
+
+            <!-- LEGEND -->
+            <footer class="inventory-footer">
+
+                <div class="legend">
+
+                    <span>
+                        <i class="legend-dot available"></i>
+                        Available
+                    </span>
+
+                    <span>
+                        <i class="legend-dot hold"></i>
+                        Reserved (On Hold)
+                    </span>
+
+                    <span>
+                        <i class="legend-dot booked"></i>
+                        Booked
+                    </span>
+
+                </div>
+
+                <div class="footer-summary">
+                    {rangeLabel}
+                    <b>|</b>
+                    {inventory.maxUnitsPerFloor}
+                    units per floor
+                </div>
+
+            </footer>
+
+        </template>
+
+    </div>
+    <c-unit-details-modal
+    if:true={showUnitDetails}
+    unit={selectedUnitId}
+    onclose={handleUnitModalClose}
+    tower-id={towerId}
+    unit-id={selectedUnitId}
+    onbooksuccess={handleBookSuccess}>
+</c-unit-details-modal>
+</template>

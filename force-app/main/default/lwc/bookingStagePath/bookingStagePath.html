@@ -1,0 +1,138 @@
+<template>
+    <section class="booking-path-container">
+
+        <template lwc:if={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner
+                    alternative-text="Loading Booking journey"
+                    size="medium">
+                </lightning-spinner>
+                <p class="loading-text">Loading Booking journey...</p>
+            </div>
+        </template>
+
+        <template lwc:elseif={hasError}>
+            <div class="message-card error-card">
+                <lightning-icon
+                    icon-name="utility:error"
+                    size="small"
+                    variant="error">
+                </lightning-icon>
+                <div>
+                    <h2>Unable to load Booking</h2>
+                    <p>{errorMessage}</p>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:elseif={noBookingFound}>
+            <div class="message-card empty-card">
+                <lightning-icon
+                    icon-name="utility:info"
+                    size="small">
+                </lightning-icon>
+                <div>
+                    <h2>No Booking found</h2>
+                    <p>
+                        No Booking record is associated with this
+                        Opportunity.
+                    </p>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:elseif={showCancelledDetails}>
+            <div class="cancelled-card">
+                <div class="cancelled-heading">
+                    <lightning-icon
+                        icon-name="utility:error"
+                        size="medium"
+                        variant="error">
+                    </lightning-icon>
+                    <div>
+                        <h2>Booking Cancelled</h2>
+                        <p><a href={bookingUrl} target="_self" class="booking-link">{bookingName}</a></p>
+                    </div>
+                </div>
+
+                <div class="cancellation-details">
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            Cancellation Date
+                        </span>
+                        <span class="detail-value">
+                            {formattedCancellationDate}
+                        </span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            Cancellation Reason
+                        </span>
+                        <span class="detail-value">
+                            {displayedCancellationReason}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:elseif={showNormalPath}>
+            <div class="path-header">
+                <div>
+                    <h2>Booking Journey</h2>
+                    <p class="booking-name"><a href={bookingUrl} target="_self" class="booking-link"> {bookingName}</a>
+</p>
+                </div>
+
+                <div class="current-stage-badge">
+                    {bookingStage}
+                </div>
+            </div>
+
+            <template lwc:if={hasRecognizedStage}>
+                <div class="stage-path">
+                    <template
+                        for:each={pathSteps}
+                        for:item="step">
+
+                        <div
+                            key={step.value}
+                            class={step.className}>
+
+                            <div class="stage-marker">
+                                {step.marker}
+                            </div>
+
+                            <div class="stage-label">
+                                {step.label}
+                            </div>
+                        </div>
+
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:else>
+                <div class="message-card empty-card">
+                    <lightning-icon
+                        icon-name="utility:warning"
+                        size="small">
+                    </lightning-icon>
+                    <div>
+                        <h2>Stage configuration required</h2>
+                        <p>{unrecognizedStageMessage}</p>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <template lwc:else>
+            <div class="message-card empty-card">
+                <p>No Booking information is available.</p>
+            </div>
+        </template>
+
+    </section>
+
+</template>

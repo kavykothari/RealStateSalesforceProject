@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CountIntervalUnitOfMeasure</fullName>
+    <inlineHelpText>The unit of measure of the interval between two consecutive assessments related to this plan. If you select Once, only one assessment is created.</inlineHelpText>
+    <trackHistory>false</trackHistory>
+</CustomField>

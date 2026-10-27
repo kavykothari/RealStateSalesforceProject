@@ -1,0 +1,1122 @@
+<template>
+
+    <div class="task-dashboard">
+
+        <!-- ================================================= -->
+        <!-- HEADER -->
+        <!-- ================================================= -->
+
+        <div class="dashboard-header">
+
+            <div class="header-left">
+
+                <div class="header-icon">
+
+                    <lightning-icon
+                        icon-name="utility:task"
+                        size="small"
+                        alternative-text="Tasks">
+                    </lightning-icon>
+
+                </div>
+
+                <div>
+
+                    <h1>
+                        Task Dashboard
+                    </h1>
+
+                    <p>
+                        Manage your overdue and upcoming tasks
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                alternative-text="Refresh"
+                title="Refresh Tasks"
+                onclick={handleRefresh}
+                variant="border-filled">
+            </lightning-button-icon>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- SUMMARY -->
+        <!-- ================================================= -->
+
+        <div class="summary-grid">
+
+            <!-- OVERDUE -->
+
+            <div class="summary-card overdue-summary">
+
+                <div class="summary-icon">
+
+                    <lightning-icon
+                        icon-name="utility:warning"
+                        size="small"
+                        alternative-text="Overdue">
+                    </lightning-icon>
+
+                </div>
+
+                <div>
+
+                    <span class="summary-label">
+                        Overdue
+                    </span>
+
+                    <strong>
+                        {overdueCount}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- TODAY -->
+
+            <div class="summary-card today-summary">
+
+                <div class="summary-icon">
+
+                    <lightning-icon
+                        icon-name="utility:event"
+                        size="small"
+                        alternative-text="Today">
+                    </lightning-icon>
+
+                </div>
+
+                <div>
+
+                    <span class="summary-label">
+                        Today
+                    </span>
+
+                    <strong>
+                        {todayCount}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- TOMORROW -->
+
+            <div class="summary-card tomorrow-summary">
+
+                <div class="summary-icon">
+
+                    <lightning-icon
+                        icon-name="utility:forward"
+                        size="small"
+                        alternative-text="Tomorrow">
+                    </lightning-icon>
+
+                </div>
+
+                <div>
+
+                    <span class="summary-label">
+                        Tomorrow
+                    </span>
+
+                    <strong>
+                        {tomorrowCount}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- TABS -->
+        <!-- ================================================= -->
+
+        <div class="tabs-container">
+
+            <lightning-tabset
+                variant="scoped"
+                active-tab-value={activeTab}
+                onchange={handleTabChange}>
+
+
+                <!-- ================================================= -->
+                <!-- OVERDUE -->
+                <!-- ================================================= -->
+
+                <lightning-tab
+                    label="Overdue Tasks"
+                    value="OVERDUE">
+
+                    <div class="tab-content">
+
+                        <template if:true={isLoading}>
+
+                            <div class="loading-container">
+
+                                <lightning-spinner
+                                    alternative-text="Loading tasks"
+                                    size="medium">
+                                </lightning-spinner>
+
+                            </div>
+
+                        </template>
+
+
+                        <template if:false={isLoading}>
+
+                            <template if:true={hasOverdueTasks}>
+
+                                <div class="task-list">
+
+
+                                    <template
+                                        for:each={overdueTasks}
+                                        for:item="task">
+
+
+                                        <div
+                                            key={task.Id}
+                                            class="task-row overdue-card">
+
+
+                                            <!-- SUBJECT -->
+
+                                            <div class="task-row-subject">
+
+                                                <div class="task-icon overdue-icon">
+
+                                                    <lightning-icon
+                                                        icon-name="utility:warning"
+                                                        size="x-small"
+                                                        alternative-text="Overdue">
+                                                    </lightning-icon>
+
+                                                </div>
+
+                                                <div class="subject-wrapper">
+
+                                                    <span
+                                                        class="task-subject-text"
+                                                        title={task.Subject}>
+
+                                                        {task.Subject}
+
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <!-- TASK ID -->
+
+                                            <a
+                                                href={task.taskUrl}
+                                                target="_blank"
+                                                class="task-id"
+                                                title={task.Id}>
+
+                                                Go To Task
+
+                                            </a>
+
+
+                                            <!-- NAME -->
+
+                                            <template if:true={task.nameUrl}>
+
+                                                <a
+                                                    href={task.nameUrl}
+                                                    target="_blank"
+                                                    class="task-name"
+                                                    title={task.nameValue}>
+
+                                                    {task.nameValue}
+
+                                                </a>
+
+                                            </template>
+
+
+                                            <template if:false={task.nameUrl}>
+
+                                                <span class="task-name empty-value">
+
+                                                    Not specified
+
+                                                </span>
+
+                                            </template>
+
+
+                                            <!-- DATE -->
+
+                                            <span class="task-date overdue-date">
+
+                                                {task.formattedDate}
+
+                                            </span>
+
+
+                                            <!-- PRIORITY -->
+
+                                            <span class={task.priorityClass}>
+
+                                                {task.Priority}
+
+                                            </span>
+
+
+                                            <!-- STATUS -->
+
+                                            <span class="status-pill">
+
+                                                {task.Status}
+
+                                            </span>
+
+
+                                            <!-- VIEW -->
+
+                                            <lightning-button
+                                                label="View"
+                                                variant="brand-outline"
+                                                icon-name="utility:preview"
+                                                icon-position="left"
+                                                data-id={task.Id}
+                                                onclick={openTaskModal}>
+                                            </lightning-button>
+
+
+                                        </div>
+
+                                    </template>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- EMPTY -->
+
+                            <template if:false={hasOverdueTasks}>
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+
+                                        <lightning-icon
+                                            icon-name="utility:success"
+                                            size="medium"
+                                            alternative-text="No overdue tasks">
+                                        </lightning-icon>
+
+                                    </div>
+
+                                    <h2>
+                                        No Overdue Tasks
+                                    </h2>
+
+                                    <p>
+                                        Great! You don't have any overdue tasks.
+                                    </p>
+
+                                </div>
+
+                            </template>
+
+                        </template>
+
+                    </div>
+
+                </lightning-tab>
+
+
+                <!-- ================================================= -->
+                <!-- TODAY -->
+                <!-- ================================================= -->
+
+                <lightning-tab
+                    label="Today"
+                    value="TODAY">
+
+                    <div class="tab-content">
+
+                        <template if:true={isLoading}>
+
+                            <div class="loading-container">
+
+                                <lightning-spinner
+                                    alternative-text="Loading tasks"
+                                    size="medium">
+                                </lightning-spinner>
+
+                            </div>
+
+                        </template>
+
+
+                        <template if:false={isLoading}>
+
+                            <template if:true={hasTodayTasks}>
+
+                                <div class="task-list">
+
+                                    <template
+                                        for:each={todayTasks}
+                                        for:item="task">
+
+
+                                        <div
+                                            key={task.Id}
+                                            class="task-row today-card">
+
+
+                                            <!-- SUBJECT -->
+
+                                            <div class="task-row-subject">
+
+                                                <div class="task-icon today-icon">
+
+                                                    <lightning-icon
+                                                        icon-name="utility:event"
+                                                        size="x-small"
+                                                        alternative-text="Today">
+                                                    </lightning-icon>
+
+                                                </div>
+
+                                                <div class="subject-wrapper">
+
+                                                    <span
+                                                        class="task-subject-text"
+                                                        title={task.Subject}>
+
+                                                        {task.Subject}
+
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <!-- TASK ID -->
+
+                                            <a
+                                                href={task.taskUrl}
+                                                target="_blank"
+                                                class="task-id"
+                                                title={task.Id}>
+
+                                                Go To Task
+
+                                            </a>
+
+
+                                            <!-- NAME -->
+
+                                            <template if:true={task.nameUrl}>
+
+                                                <a
+                                                    href={task.nameUrl}
+                                                    target="_blank"
+                                                    class="task-name"
+                                                    title={task.nameValue}>
+
+                                                    {task.nameValue}
+
+                                                </a>
+
+                                            </template>
+
+
+                                            <template if:false={task.nameUrl}>
+
+                                                <span class="task-name empty-value">
+
+                                                    Not specified
+
+                                                </span>
+
+                                            </template>
+
+
+                                            <!-- DATE -->
+
+                                            <span class="task-date today-date">
+
+                                                {task.formattedDate}
+
+                                            </span>
+
+
+                                            <!-- PRIORITY -->
+
+                                            <span class={task.priorityClass}>
+
+                                                {task.Priority}
+
+                                            </span>
+
+
+                                            <!-- STATUS -->
+
+                                            <span class="status-pill">
+
+                                                {task.Status}
+
+                                            </span>
+
+
+                                            <!-- VIEW -->
+
+                                            <lightning-button
+                                                label="View"
+                                                variant="brand-outline"
+                                                icon-name="utility:preview"
+                                                icon-position="left"
+                                                data-id={task.Id}
+                                                onclick={openTaskModal}>
+                                            </lightning-button>
+
+
+                                        </div>
+
+                                    </template>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- EMPTY -->
+
+                            <template if:false={hasTodayTasks}>
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+
+                                        <lightning-icon
+                                            icon-name="utility:success"
+                                            size="medium"
+                                            alternative-text="No tasks">
+                                        </lightning-icon>
+
+                                    </div>
+
+                                    <h2>
+                                        No Tasks Today
+                                    </h2>
+
+                                    <p>
+                                        You don't have any tasks due today.
+                                    </p>
+
+                                </div>
+
+                            </template>
+
+                        </template>
+
+                    </div>
+
+                </lightning-tab>
+
+
+                <!-- ================================================= -->
+                <!-- TOMORROW -->
+                <!-- ================================================= -->
+
+                <lightning-tab
+                    label="Tomorrow"
+                    value="TOMORROW">
+
+                    <div class="tab-content">
+
+                        <template if:true={isLoading}>
+
+                            <div class="loading-container">
+
+                                <lightning-spinner
+                                    alternative-text="Loading tasks"
+                                    size="medium">
+                                </lightning-spinner>
+
+                            </div>
+
+                        </template>
+
+
+                        <template if:false={isLoading}>
+
+                            <template if:true={hasTomorrowTasks}>
+
+                                <div class="task-list">
+
+                                    <template
+                                        for:each={tomorrowTasks}
+                                        for:item="task">
+
+
+                                        <div
+                                            key={task.Id}
+                                            class="task-row tomorrow-card">
+
+
+                                            <!-- SUBJECT -->
+
+                                            <div class="task-row-subject">
+
+                                                <div class="task-icon tomorrow-icon">
+
+                                                    <lightning-icon
+                                                        icon-name="utility:forward"
+                                                        size="x-small"
+                                                        alternative-text="Tomorrow">
+                                                    </lightning-icon>
+
+                                                </div>
+
+                                                <div class="subject-wrapper">
+
+                                                    <span
+                                                        class="task-subject-text"
+                                                        title={task.Subject}>
+
+                                                        {task.Subject}
+
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <!-- TASK ID -->
+
+                                            <a
+                                                href={task.taskUrl}
+                                                target="_blank"
+                                                class="task-id"
+                                                title={task.Id}>
+
+                                                Go To Task
+
+                                            </a>
+
+
+                                            <!-- NAME -->
+
+                                            <template if:true={task.nameUrl}>
+
+                                                <a
+                                                    href={task.nameUrl}
+                                                    target="_blank"
+                                                    class="task-name"
+                                                    title={task.nameValue}>
+
+                                                    {task.nameValue}
+
+                                                </a>
+
+                                            </template>
+
+
+                                            <template if:false={task.nameUrl}>
+
+                                                <span class="task-name empty-value">
+
+                                                    Not specified
+
+                                                </span>
+
+                                            </template>
+
+
+                                            <!-- DATE -->
+
+                                            <span class="task-date tomorrow-date">
+
+                                                {task.formattedDate}
+
+                                            </span>
+
+
+                                            <!-- PRIORITY -->
+
+                                            <span class={task.priorityClass}>
+
+                                                {task.Priority}
+
+                                            </span>
+
+
+                                            <!-- STATUS -->
+
+                                            <span class="status-pill">
+
+                                                {task.Status}
+
+                                            </span>
+
+
+                                            <!-- VIEW -->
+
+                                            <lightning-button
+                                                label="View"
+                                                variant="brand-outline"
+                                                icon-name="utility:preview"
+                                                icon-position="left"
+                                                data-id={task.Id}
+                                                onclick={openTaskModal}>
+                                            </lightning-button>
+
+
+                                        </div>
+
+                                    </template>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- EMPTY -->
+
+                            <template if:false={hasTomorrowTasks}>
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+
+                                        <lightning-icon
+                                            icon-name="utility:success"
+                                            size="medium"
+                                            alternative-text="No tasks">
+                                        </lightning-icon>
+
+                                    </div>
+
+                                    <h2>
+                                        No Tasks Tomorrow
+                                    </h2>
+
+                                    <p>
+                                        You don't have any tasks due tomorrow.
+                                    </p>
+
+                                </div>
+
+                            </template>
+
+                        </template>
+
+                    </div>
+
+                </lightning-tab>
+
+            </lightning-tabset>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- TASK DETAIL MODAL -->
+    <!-- ========================================================= -->
+
+    <template if:true={showTaskModal}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="task-modal-heading"
+            class="slds-modal slds-fade-in-open">
+
+
+            <div class="slds-modal__container task-modal">
+
+
+                <!-- HEADER -->
+
+                <header class="slds-modal__header task-modal-header">
+
+
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close"
+                        title="Close"
+                        onclick={closeTaskModal}
+                        disabled={isCompleting}>
+
+
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="small">
+                        </lightning-icon>
+
+
+                        <span class="slds-assistive-text">
+                            Close
+                        </span>
+
+                    </button>
+
+
+                    <div class="modal-title-icon">
+
+                        <lightning-icon
+                            icon-name="utility:check"
+                            size="small"
+                            alternative-text="Task">
+                        </lightning-icon>
+
+                    </div>
+
+
+                    <h2
+                        id="task-modal-heading"
+                        class="slds-text-heading_medium">
+
+                        Task Details
+
+                    </h2>
+
+
+                    <template if:true={selectedTask}>
+
+                        <p class="modal-task-subject">
+
+                            {selectedTask.Subject}
+
+                        </p>
+
+                    </template>
+
+                </header>
+
+
+                <!-- BODY -->
+
+                <div class="slds-modal__content task-modal-body">
+
+
+                    <template if:true={selectedTask}>
+
+
+                        <!-- TASK INFORMATION -->
+
+                        <div class="task-info-grid">
+
+
+                            <!-- TASK ID -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Task ID
+                                </span>
+
+                                <a
+                                    href={selectedTask.taskUrl}
+                                    target="_blank"
+                                    class="info-link">
+
+                                    {selectedTask.Id}
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- NAME -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Name
+                                </span>
+
+
+                                <template if:true={selectedTask.nameUrl}>
+
+                                    <a
+                                        href={selectedTask.nameUrl}
+                                        target="_blank"
+                                        class="info-link">
+
+                                        {selectedTask.nameValue}
+
+                                    </a>
+
+                                </template>
+
+
+                                <template if:false={selectedTask.nameUrl}>
+
+                                    <span class="info-value empty-value">
+
+                                        Not specified
+
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- RELATED TO -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Related To
+                                </span>
+
+
+                                <template if:true={selectedTask.relatedToUrl}>
+
+                                    <a
+                                        href={selectedTask.relatedToUrl}
+                                        target="_blank"
+                                        class="info-link">
+
+                                        {selectedTask.relatedToName}
+
+                                    </a>
+
+                                </template>
+
+
+                                <template if:false={selectedTask.relatedToUrl}>
+
+                                    <span class="info-value empty-value">
+
+                                        Not specified
+
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- DUE DATE -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Due Date
+                                </span>
+
+                                <span class="info-value">
+
+                                    {selectedTask.formattedDate}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Status
+                                </span>
+
+                                <span class="status-pill">
+
+                                    {selectedTask.Status}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- PRIORITY -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Priority
+                                </span>
+
+                                <span class={selectedTask.priorityClass}>
+
+                                    {selectedTask.Priority}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- OWNER -->
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Owner
+                                </span>
+
+                                <span class="info-value">
+
+                                    {selectedTask.ownerName}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COMMENTS -->
+
+                        <div class="modal-comments">
+
+                            <span class="info-label">
+                                Comments
+                            </span>
+
+
+                            <div class="comments-box">
+
+                                <template if:true={selectedTask.Description}>
+
+                                    {selectedTask.Description}
+
+                                </template>
+
+
+                                <template if:false={selectedTask.Description}>
+
+                                    <span class="empty-value">
+
+                                        No comments
+
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COMPLETION COMMENTS -->
+
+                        <template if:true={showCompletionInput}>
+
+                            <div class="completion-section">
+
+
+                                <lightning-textarea
+                                    label="Completion Comments"
+                                    value={completionComments}
+                                    onchange={handleCommentsChange}
+                                    required
+                                    message-when-value-missing="Please enter completion comments."
+                                    placeholder="Enter comments about the task completion..."
+                                    disabled={isCompleting}>
+                                </lightning-textarea>
+
+
+                                <p class="completion-help">
+
+                                    Please provide a brief update before marking this task as completed.
+
+                                </p>
+
+                            </div>
+
+                        </template>
+
+                    </template>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <footer class="slds-modal__footer task-modal-footer">
+
+
+                    <!-- CLOSE -->
+
+                    <lightning-button
+                        label="Close"
+                        variant="neutral"
+                        onclick={closeTaskModal}
+                        disabled={isCompleting}>
+                    </lightning-button>
+
+
+                    <!-- INITIAL MARK COMPLETE -->
+
+                    <template if:false={showCompletionInput}>
+
+                        <lightning-button
+                            label="Mark Complete"
+                            variant="brand"
+                            icon-name="utility:check"
+                            onclick={showCompletionComments}>
+                        </lightning-button>
+
+                    </template>
+
+
+                    <!-- COMPLETION MODE -->
+
+                    <template if:true={showCompletionInput}>
+
+
+                        <lightning-button
+                            label="Cancel"
+                            variant="neutral"
+                            onclick={cancelCompletion}
+                            disabled={isCompleting}>
+                        </lightning-button>
+
+
+                        <lightning-button
+                            label="Complete Task"
+                            variant="brand"
+                            icon-name="utility:check"
+                            onclick={completeSelectedTask}
+                            disabled={isCompleting}>
+                        </lightning-button>
+
+                    </template>
+
+                </footer>
+
+            </div>
+
+        </section>
+
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </template>
+
+</template>

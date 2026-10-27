@@ -1,0 +1,450 @@
+<template>
+    <div class="main-container">
+
+        <!-- LOADING -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner
+                    alternative-text="Loading customer details"
+                    size="medium">
+                </lightning-spinner>
+                <p>Loading customer details...</p>
+            </div>
+        </template>
+
+        <!-- SEARCH CUSTOMER -->
+        <template if:true={showSearch}>
+            <div class="search-header">
+                <div class="header-icon">
+                    <lightning-icon
+                        icon-name="standard:contact"
+                        size="medium">
+                    </lightning-icon>
+                </div>
+                <div>
+                    <h2>Find Customer</h2>
+                    <p>Search existing customers and generate a cost sheet.</p>
+                </div>
+            </div>
+
+            <div class="search-card">
+                <div class="input-row">
+                    <lightning-input
+                        label="First Name"
+                        value={firstName}
+                        data-field="firstName"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+
+                    <lightning-input
+                        label="Last Name"
+                        value={lastName}
+                        data-field="lastName"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+
+                <div class="input-row">
+                    <lightning-input
+                        label="Phone Number"
+                        type="tel"
+                        value={phone}
+                        data-field="phone"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+
+                    <lightning-input
+                        label="Email"
+                        type="email"
+                        value={email}
+                        data-field="email"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+
+                <div class="search-actions">
+                    <lightning-button
+                        label="Search Customer"
+                        icon-name="utility:search"
+                        variant="brand"
+                        onclick={handleSearch}
+                        disabled={isSearching}>
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- SEARCH RESULTS -->
+            <template if:true={hasSearchResults}>
+                <div class="details-card">
+                    <div class="section-header">
+                        <lightning-icon
+                            icon-name="standard:opportunity"
+                            size="small">
+                        </lightning-icon>
+                        <h3>Customer / Opportunity</h3>
+                    </div>
+
+                    <div class="search-results">
+                        <template for:each={searchResults} for:item="item">
+                            <div
+                                key={item.opportunityId}
+                                class="customer-result"
+                                data-id={item.opportunityId}
+                                onclick={handleOpportunitySelect}>
+
+                                <div class="customer-avatar">
+                                    <lightning-icon
+                                        icon-name="standard:contact"
+                                        size="medium">
+                                    </lightning-icon>
+                                </div>
+
+                                <div class="customer-title">
+                                    <h2>{item.fullName}</h2>
+                                    <p>
+                                        {item.phone}
+                                        <template if:true={item.email}>
+                                            &nbsp; • &nbsp; {item.email}
+                                        </template>
+                                    </p>
+                                    <p>
+                                        Opportunity:
+                                        <strong>{item.opportunityName}</strong>
+                                    </p>
+                                </div>
+
+                                <span class="selected-badge">Select</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- EMPTY SEARCH STATE -->
+            <template if:false={hasSearchResults}>
+                <template if:false={isSearching}>
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <lightning-icon
+                                icon-name="utility:search"
+                                size="large">
+                            </lightning-icon>
+                        </div>
+                        <h2>Search for a Customer</h2>
+                        <p>
+                            Enter a first name, last name, phone number,
+                            or email to find an existing customer.
+                        </p>
+                    </div>
+                </template>
+            </template>
+        </template>
+
+        <!-- CUSTOMER DETAILS -->
+        <template if:true={showCustomerDetails}>
+
+            <!-- SELECTED CUSTOMER -->
+            <div class="customer-header">
+                <div class="customer-avatar">
+                    <lightning-icon
+                        icon-name="standard:contact"
+                        size="medium">
+                    </lightning-icon>
+                </div>
+
+                <div class="customer-title">
+                    <h2>{selectedOpportunity.fullName}</h2>
+                    <p>{selectedOpportunity.opportunityName}</p>
+                    <span class="selected-badge">Customer Selected</span>
+                </div>
+            </div>
+
+            <!-- CONTACT INFORMATION -->
+            <div class="details-card">
+                <div class="section-header">
+                    <lightning-icon
+                        icon-name="standard:contact"
+                        size="small">
+                    </lightning-icon>
+                    <h3>Contact Information</h3>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <label>Full Name</label>
+                        <p>{selectedOpportunity.fullName}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Phone Number</label>
+                        <p>{selectedOpportunity.phone}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Email</label>
+                        <p>{selectedOpportunity.email}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Contact</label>
+                        <p>{selectedOpportunity.contactName}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPPORTUNITY INFORMATION -->
+            <div class="details-card">
+                <div class="section-header">
+                    <lightning-icon
+                        icon-name="standard:opportunity"
+                        size="small">
+                    </lightning-icon>
+                    <h3>Opportunity Information</h3>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <label>Opportunity</label>
+                        <p>{selectedOpportunity.opportunityName}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Stage</label>
+                        <p>{selectedOpportunity.stageName}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Property Type</label>
+                        <p>{selectedOpportunity.propertyType}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Purchase Timeline</label>
+                        <p>{selectedOpportunity.purchaseTimeline}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Purchase Purpose</label>
+                        <p>{selectedOpportunity.purchasePurpose}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Lead Source</label>
+                        <p>{selectedOpportunity.leadSource}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Budget Minimum</label>
+                        <p>{selectedOpportunity.budgetMinimum}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Budget Maximum</label>
+                        <p>{selectedOpportunity.budgetMaximum}</p>
+                    </div>
+                </div>
+
+                <template if:true={selectedOpportunity.customerRequirement}>
+                    <div class="requirement-box">
+                        <label>Customer Requirement</label>
+                        <p>{selectedOpportunity.customerRequirement}</p>
+                    </div>
+                </template>
+            </div>
+
+            <!-- DISCOUNT COUPON -->
+            <div class="details-card action-card">
+
+                <div class="coupon-card">
+                    <div class="coupon-heading">
+                        <div class="coupon-icon">
+                            <lightning-icon
+                                icon-name="utility:percent"
+                                size="small">
+                            </lightning-icon>
+                        </div>
+
+                        <div class="coupon-title">
+                            <h3>Discount Coupon</h3>
+                            <p>Apply an eligible coupon to this cost sheet.</p>
+                        </div>
+                    </div>
+
+                    <div class="coupon-controls">
+                        <lightning-input
+                            type="text"
+                            label="Discount Code"
+                            value={couponCode}
+                            onchange={handleCouponCodeChange}
+                            disabled={isCouponApplied}
+                            placeholder="Enter coupon code">
+                        </lightning-input>
+
+                        <div class="coupon-buttons">
+                            <lightning-button
+                                label="Apply Coupon"
+                                variant="brand"
+                                onclick={handleApplyCoupon}
+                                disabled={isApplyingCoupon}>
+                            </lightning-button>
+
+                            <lightning-button
+                                label="Remove"
+                                variant="neutral"
+                                onclick={handleRemoveCoupon}
+                                disabled={isRemoveCouponDisabled}>
+                            </lightning-button>
+                        </div>
+                    </div>
+
+                    <template lwc:if={isCouponApplied}>
+                        <div class="coupon-success">
+                            <lightning-icon
+                                icon-name="utility:success"
+                                size="x-small">
+                            </lightning-icon>
+                            <span>{appliedCouponMessage}</span>
+                        </div>
+
+                        <div class="coupon-summary">
+                            <div class="summary-row">
+                                <span>Original Total</span>
+                                <strong>{formattedOriginalTotal}</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Coupon Discount</span>
+                                <strong class="discount-amount">
+                                    -{formattedDiscountValue}
+                                </strong>
+                            </div>
+
+                            <div class="summary-row payable-total">
+                                <span>Revised Payable Total</span>
+                                <strong>{formattedDiscountedTotal}</strong>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- NEXT STEPS -->
+                <div class="sales-action-panel">
+                    <div class="action-panel-heading">
+                        <div>
+                            <h3>Next Steps</h3>
+                            <p>
+                                Capture feedback or prepare the property
+                                cost sheet.
+                            </p>
+                        </div>
+                        <lightning-icon
+                            icon-name="utility:forward"
+                            size="small">
+                        </lightning-icon>
+                    </div>
+
+                    <div class="selected-actions">
+                        <template if:true={allowBackToSearch}>
+                            <lightning-button
+                                label="Search Another Customer"
+                                icon-name="utility:search"
+                                variant="neutral"
+                                onclick={handleBackToSearch}>
+                            </lightning-button>
+                        </template>
+
+                        <template if:false={showFeedbackForm}>
+                            <lightning-button
+                                label="Add Feedback"
+                                icon-name="utility:edit"
+                                variant="neutral"
+                                onclick={handleAddFeedback}>
+                            </lightning-button>
+                        </template>
+
+                        <lightning-button
+                            label="Generate Cost Sheet"
+                            icon-name="utility:download"
+                            variant="brand"
+                            onclick={handleGenerate}
+                            disabled={isGenerating}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- CUSTOMER FEEDBACK -->
+                <template if:true={showFeedbackForm}>
+                    <section class="feedback-section">
+                        <div class="feedback-header">
+                            <div class="feedback-icon">
+                                <lightning-icon
+                                    icon-name="utility:feedback"
+                                    size="small">
+                                </lightning-icon>
+                            </div>
+
+                            <div class="feedback-heading-text">
+                                <h3>Customer Feedback</h3>
+                                <p>
+                                    Record site visit observations,
+                                    preferences and next steps.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="feedback-input-container">
+                            <lightning-textarea
+                                label="Feedback Notes"
+                                placeholder="Enter customer feedback, property preferences or observations..."
+                                value={feedbackText}
+                                onchange={handleFeedbackChange}
+                                required>
+                            </lightning-textarea>
+
+                            <div class="feedback-hint">
+                                <lightning-icon
+                                    icon-name="utility:info"
+                                    size="xx-small">
+                                </lightning-icon>
+                                <span>
+                                    Feedback will be saved against the
+                                    selected customer, opportunity and unit.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="feedback-actions">
+                            <lightning-button
+                                label="Cancel"
+                                variant="neutral"
+                                onclick={handleCancelFeedback}
+                                disabled={isSubmittingFeedback}>
+                            </lightning-button>
+
+                            <lightning-button
+                                label="Submit Feedback"
+                                variant="brand"
+                                icon-name="utility:check"
+                                onclick={handleSubmitFeedback}
+                                disabled={isSubmittingFeedback}>
+                            </lightning-button>
+                        </div>
+                    </section>
+                </template>
+
+            </div>
+        </template>
+
+        <!-- COST SHEET GENERATION OVERLAY -->
+        <template if:true={isGenerating}>
+            <div class="generating-container">
+                <lightning-spinner
+                    alternative-text="Generating Cost Sheet"
+                    size="medium">
+                </lightning-spinner>
+                <p>Generating Cost Sheet...</p>
+            </div>
+        </template>
+
+    </div>
+</template>

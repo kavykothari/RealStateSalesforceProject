@@ -1,0 +1,54 @@
+<template>
+    <lightning-quick-action-panel header="Task / Follow Up">
+
+        <template lwc:if={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner
+                    alternative-text="Loading follow-up details"
+                    size="medium">
+                </lightning-spinner>
+            </div>
+        </template>
+
+        <template lwc:else>
+            <div class="form-container">
+
+                <lightning-input
+                    type="date"
+                    label="Follow-up Date"
+                    value={followUpDate}
+                    onchange={handleDateChange}
+                    required>
+                </lightning-input>
+
+                <lightning-textarea
+                    class="description-field"
+                    label="Description"
+                    value={description}
+                    onchange={handleDescriptionChange}
+                    placeholder="Enter follow-up details..."
+                    required>
+                </lightning-textarea>
+
+            </div>
+        </template>
+
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                onclick={handleCancel}
+                disabled={isSaving}>
+            </lightning-button>
+
+            <lightning-button
+                class="slds-m-left_small"
+                label="Create"
+                variant="brand"
+                onclick={handleCreate}
+                disabled={isLoading}
+                loading={isSaving}>
+            </lightning-button>
+        </div>
+
+    </lightning-quick-action-panel>
+</template>

@@ -1,0 +1,426 @@
+<template>
+
+    <template if:true={showModal}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            class="slds-modal slds-fade-in-open unit-modal">
+
+            <div class="slds-modal__container unit-modal-container">
+
+                <!-- =====================================================
+                     HEADER
+                     ===================================================== -->
+
+                <header class="unit-modal-header">
+
+                    <div class="unit-header-left">
+
+                        <div class="unit-header-icon">
+
+                            <lightning-icon
+                                icon-name="standard:household"
+                                alternative-text="Unit"
+                                size="small">
+                            </lightning-icon>
+
+                        </div>
+
+                        <div>
+
+                            <div class="unit-header-title">
+                                Unit Details
+                            </div>
+
+                            <div class="unit-header-code">
+                                {unit.Unit_Flat_Code__c}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="unit-close-button"
+                        title="Close"
+                        onclick={closeModal}>
+
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="x-small">
+                        </lightning-icon>
+
+                    </button>
+
+                </header>
+
+
+                <!-- =====================================================
+                     UNIT SUMMARY
+                     ===================================================== -->
+
+                <div class="unit-summary">
+
+                    <!-- Configuration -->
+                    <div class="summary-item">
+
+                        <span class="summary-label">
+                            Configuration
+                        </span>
+
+                        <span class="summary-value">
+                            {unit.Configuration__c}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Facing -->
+                    <div class="summary-item">
+
+                        <span class="summary-label">
+                            Facing
+                        </span>
+
+                        <span class="summary-value">
+                            {unit.Facing__c}
+                        </span>
+
+                    </div>
+
+
+                    <!-- View -->
+                    <div class="summary-item">
+
+                        <span class="summary-label">
+                            View
+                        </span>
+
+                        <span class="summary-value">
+                            {unit.Flat_Facing_View__c}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Area -->
+                    <div class="summary-item">
+
+                        <span class="summary-label">
+                            Area
+                        </span>
+
+                        <span class="summary-value">
+                            {unit.Super_Built_up_Area_Sq_Ft__c} Sq. Ft.
+                        </span>
+
+                    </div>
+
+
+                    <!-- Rate -->
+                    <div class="summary-item">
+
+                        <span class="summary-label">
+                            Rate / Sq. Ft.
+                        </span>
+
+                        <span class="summary-value">
+                            ₹ {unit.Rate_per_Sq_Ft__c}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="summary-item">
+
+                        <span class="summary-label">
+                            Status
+                        </span>
+
+                        <span class={selectedUnitStatusClass}>
+                            {unit.Flat_Status__c}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================================
+                     BODY
+                     ===================================================== -->
+
+                <div class="unit-modal-body">
+
+
+                    <!-- =================================================
+                         PRICING & CHARGES
+                         ================================================= -->
+
+                    <div class="details-section">
+
+                        <div class="section-heading">
+
+                            <lightning-icon
+                                icon-name="utility:money"
+                                size="x-small">
+                            </lightning-icon>
+
+                            <span>
+                                Pricing &amp; Charges
+                            </span>
+
+                        </div>
+
+
+                        <div class="details-grid">
+
+
+                            <!-- Facing Charges -->
+                            <div class="detail-card">
+
+                                <span class="detail-label">
+                                    Facing Charges
+                                </span>
+
+                                <span class="detail-value">
+                                    ₹ {unit.Flat_Facing_Charges__c}
+                                </span>
+
+                            </div>
+
+
+                            <!-- Parking Charges -->
+                            <div class="detail-card">
+
+                                <span class="detail-label">
+                                    Parking Charges
+                                </span>
+
+                                <span class="detail-value">
+                                    ₹ {unit.Parking_Charges__c}
+                                </span>
+
+                            </div>
+
+
+                            <!-- Floor Rise Charges -->
+                            <div class="detail-card">
+
+                                <span class="detail-label">
+                                    Floor Rise Charges
+                                </span>
+
+                                <span class="detail-value">
+                                    ₹ {unit.Floor_Rise_Charges__c}
+                                </span>
+
+                            </div>
+
+
+                            <!-- Amenities Charges -->
+                            <div class="detail-card">
+
+                                <span class="detail-label">
+                                    Amenities Charges
+                                </span>
+
+                                <span class="detail-value">
+                                    ₹ {unit.Amenities_Charges__c}
+                                </span>
+
+                            </div>
+
+
+                            <!-- GST -->
+                            <div class="detail-card">
+
+                                <span class="detail-label">
+                                    GST
+                                </span>
+
+                                <span class="detail-value">
+                                    {unit.GST__c} %
+                                </span>
+
+                            </div>
+
+
+                            <!-- Total -->
+                            <div class="detail-card total-card">
+
+                                <span class="detail-label">
+                                    Base Amount (without any charges)
+                                </span>
+
+                                <span class="total-value">
+                                    ₹ {unit.Total_Amount__c}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CONTACT DETAILS
+                         ================================================= -->
+
+                    <div class="details-section contact-section">
+
+
+                        <!-- Section Header -->
+
+                        <div class="section-heading">
+
+                            <lightning-icon
+                                icon-name="standard:contact"
+                                size="x-small">
+                            </lightning-icon>
+
+                            <span>
+                                Contact Details
+                            </span>
+
+                        </div>
+
+
+                        <!-- Contact Form -->
+
+                        <lightning-record-edit-form
+                            object-api-name="Unit__c"
+                            class="contact-form">
+
+
+                            <div class="contact-grid">
+
+
+                                <!-- ================================
+                                     PURCHASED BY
+                                     ================================ -->
+
+                                <div class="contact-field">
+
+                                    <lightning-input-field
+                                        field-name="Purchased_By__c"
+                                        value={purchasedById}
+                                        onchange={handlePurchasedByChange}
+                                        variant="label-stacked"
+                                        required>
+                                    </lightning-input-field>
+
+                                </div>
+
+
+                                <!-- ================================
+                                     BOOKED BY
+                                     ================================ -->
+
+                                <div class="contact-field">
+
+                                    <lightning-input-field
+                                        field-name="Sold_By__c"
+                                        value={bookedById}
+                                        onchange={handleBookedByChange}
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+
+                                </div>
+
+
+                                <!-- ================================
+                                     RESERVED / ON HOLD BY
+                                     ================================ -->
+
+                                <div class="contact-field">
+
+                                    <lightning-input-field
+                                        field-name="Sold_By__c"
+                                        value={reservedOnHoldById}
+                                        onchange={handleReservedOnHoldByChange}
+                                        variant="label-stacked">
+                                    </lightning-input-field>
+
+                                </div>
+
+                            </div>
+
+
+                        </lightning-record-edit-form>
+
+
+                        <!-- =================================================
+                             BOOK UNIT ACTION
+                             ================================================= -->
+
+                        <div class="booking-action">
+
+                            
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =====================================================
+                     FOOTER
+                     ===================================================== -->
+
+                <footer class="unit-modal-footer">
+                   <lightning-button
+                                variant="brand"
+                                label="Book Unit"
+                                icon-name="utility:check"
+                                icon-position="left"
+                                disabled={isBooking}
+                                onclick={handleBookUnit}>
+                            </lightning-button>
+
+
+                    <lightning-button
+                        label="Generate Cost Sheet"
+                        icon-name="utility:form"
+                        variant="brand-outline"
+                        onclick={handleGenerateCostSheet}
+                        disabled={isActionLoading}>
+                    </lightning-button>
+
+                     <lightning-button
+                        label="Close"
+                        variant="neutral"
+                        onclick={closeModal}
+                        disabled={isActionLoading}>
+                    </lightning-button>
+
+
+                   
+
+                </footer>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- BACKDROP -->
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <c-cost-sheet-generator
+    unit-id={unitId}
+    contact-id={purchasedById}>
+</c-cost-sheet-generator>
+
+    </template>
+
+</template>
